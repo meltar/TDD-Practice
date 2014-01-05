@@ -1,16 +1,18 @@
 require "rspec"
-require "./game_of_life_verbs.rb"
+require_relative './game_of_life_verbs'
 
 describe "game of life:" do
 	describe "build_world" do
 		it "should take a length and width" do
 			world = build_world(5,4)
-			expect(world.first.count).to eq(5)
-			expect(world.count).to eq(4)
+
+			expect(world.count).to eq(5)
+			expect(world.first.count).to eq(4)
 		end	
 
 		it "should start with all dead cells" do
 			world = build_world(6,3)
+
 			expect(world.first).to include('dead')
 			expect(world.first).to_not include('alive')
 		end
@@ -71,10 +73,22 @@ describe "game of life:" do
 		end
 	end
 
-	describe "count_neighbors" do
-		it "should return the total number of living neighbors" do
+	describe "find_neighbors" do
+		it "should return all of the living neighbors" do
 			world = build_world(5,5)
-			expect(count_neighbors(world, 1, 3)).to eq(2)
+			seed_world(world, [1,2])
+			seed_world(world, [2,3])
+
+			expect(find_neighbors(world, 1, 3)).to eq(2)
+		end
+
+		it "should not count the current cell as a neighbor of itself" do
+			world = build_world(5,5)
+			seed_world(world, [1,2])
+			seed_world(world, [2,3])
+
+			expect(find_neighbors(world, 2, 3)).to eq(1)
 		end
 	end
 end
+
